@@ -13,64 +13,33 @@ import productRouter from "./routes/productRoutes.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 
-// ---------------------
-// Environment Variables
-// ---------------------
 dotenv.config();
-
-// ---------------------
-// Database Connection
-// ---------------------
 connectDB();
 
-// ---------------------
-// Initialize App
-// ---------------------
 const app = express();
 
-// ---------------------
-// Middleware
-// ---------------------
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ---------------------
-// API Routes
-// ---------------------
 app.use("/api/v1/auth", authrouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/orders", orderRouter);
 
-// ---------------------
-// Root Route
-// ---------------------
-app.get("/", (req, res) => {
-  res.send({
-    message: "Welcome to ecommerce app",
-  });
-});
-
-// ---------------------
-// Static Files (Deployment)
-// ---------------------
-
-// Fix __dirname for ES Modules
+// Fix __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Serve static files from client/build
+// Serve static React files
 app.use(express.static(path.join(__dirname, "./client/build")));
 
+// Serve React app for all non-API routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-// ---------------------
-// Server Start
-// ---------------------
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
